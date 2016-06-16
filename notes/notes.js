@@ -33,12 +33,26 @@
     };
 
     $scope.save = function() {
-      NotesService.create($scope.note);
-      $scope.clearForm();
+      if ($scope.note._id) {
+        NotesService.update($scope.note);
+      }
+      else {
+        NotesService.create($scope.note)
+          .then(function(res) {
+            $scope.note = res.data.note;
+          });
+      }
     };
 
     $scope.edit = function(note) {
-      $scope.note = note;
+      $scope.note = angular.copy(note);
+    };
+
+    $scope.delete = function() {
+      NotesService.delete($scope.note)
+        .then(function() {
+          $scope.clearForm();
+        });
     };
 
     $scope.clearForm();
